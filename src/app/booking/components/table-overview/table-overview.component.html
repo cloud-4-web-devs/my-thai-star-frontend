@@ -1,0 +1,19 @@
+<div class="d-flex p-2">
+  <input class="form-control form-control-lg" type="search"
+         placeholder="Type the number of table seats to filter..."
+         aria-label="Type seats number to filter"
+         [formControl]="filterInput">
+</div>
+<ul class="d-flex flex-wrap m-0 p-0 list-unstyled"
+    *ngIf="filteredTables$ | async as filteredTables; else noResults">
+  <ng-template
+    [ngIf]="filteredTables.length > 0"
+    [ngIfElse]="noResults">
+    <li *ngFor="let table of filteredTables">
+      <mts-table-item class="m-2" [table]="table"></mts-table-item>
+    </li>
+  </ng-template>
+</ul>
+<ng-template #noResults>
+  <p class="p-2">No tables matching the current filter</p>
+</ng-template>

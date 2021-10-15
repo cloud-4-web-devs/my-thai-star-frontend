@@ -1,0 +1,19 @@
+<div class="card text-center">
+  <div class="card-header">
+    {{booking?.date}}
+  </div>
+  <div class="card-body">
+    <h5 class="card-title"><label class="d-flex justify-content-center align-items-center">Table:&nbsp;<span class="badge rounded-pill bg-secondary">{{booking?.tableId}}</span></label></h5>
+    <div class="mb-2">
+      <span>{{booking?.timeFrom}}</span>&nbsp;-&nbsp;<span>{{booking?.timeTo}}</span>
+    </div>
+    <div class="mb-3 d-flex justify-content-center align-items-center">
+      <span class="badge" [ngClass]="booking?.statusCssClass ?? ''">{{booking?.status}}</span>&nbsp;&nbsp;<span class="fas fa-chair"></span>&nbsp;<span class="badge bg-secondary">{{booking?.seats}}</span>
+    </div>
+    <div class="mb-3 text-truncate">
+      <span>{{booking?.token}}</span>
+    </div>
+    <button type="button" class="btn btn-primary" (click)="cancel(booking?.token)">Cancel</button>
+  </div>
+</div>
+

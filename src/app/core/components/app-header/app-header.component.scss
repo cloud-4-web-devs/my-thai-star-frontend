@@ -1,0 +1,13 @@
+:host {
+  display: block;
+}
+
+div#navbarNav {
+  max-height: 500px;
+  transition: max-height 0.35s ease;
+  overflow: hidden;
+
+  &.toggling {
+    max-height: 0;
+  }
+}

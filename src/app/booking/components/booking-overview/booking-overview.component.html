@@ -1,0 +1,40 @@
+<div class="d-flex p-2">
+  <input class="form-control form-control-lg" type="search"
+         placeholder="Type any property value to filter..."
+         aria-label="Type any property value to filter"
+         [formControl]="filterInput">
+</div>
+<ul class="d-flex flex-wrap m-0 p-0 list-unstyled"
+    *ngIf="filteredBookings$ | async as filteredBookings; else noResults">
+  <ng-template
+    [ngIf]="filteredBookings.length > 0"
+    [ngIfElse]="noResults">
+    <li *ngFor="let booking of filteredBookings">
+      <mts-booking-item [of]="booking"
+                        (cancelClick)="confirmAndCancelBooking(confirmationModalDialog, booking)"
+                        class="m-2"></mts-booking-item>
+    </li>
+  </ng-template>
+</ul>
+<ng-template #noResults>
+  <p class="p-2">No bookings matching the current filter</p>
+</ng-template>
+
+<ng-template #confirmationModalDialog let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Cancel table booking</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <p class="m-0 text-center"><strong>Are you sure you want to cancel your booking</strong></p>
+    <p class="text-truncate m-0 text-center">{{bookingAboutToBeCancelled?.token}}</p>
+    <p class="text-center"><strong>?</strong></p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" ngbAutofocus (click)="modal.dismiss()">No</button>
+    <button type="button" class="btn btn-danger" (click)="modal.close()">Yes, cancel the booking</button>
+  </div>
+</ng-template>
+
+

@@ -1,1 +1,10 @@
-/* You can add global styles to this file, and also import other style files */
+@import "~bootstrap/scss/bootstrap";
+
+.ng-invalid.ng-touched, form.ng-submitted .ng-invalid {
+  @extend .is-invalid;
+}
+
+.error-message {
+  @extend .invalid-feedback;
+  display: block;
+}

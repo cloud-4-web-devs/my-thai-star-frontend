@@ -1,0 +1,59 @@
+<form [formGroup]="bookingForm" (ngSubmit)="book()" #bookingFormDirective="ngForm">
+  <div class="row mb-3 g-1 align-items-center">
+    <div class="col-12 col-md-3 text-md-end"><label for="bookingTimeFrom">email:</label></div>
+    <div class="col col-md-5 col-lg-3">
+      <ba-with-error-messages>
+        <input id="email" class="form-control" placeholder="someone@example.com" formControlName="email">
+      </ba-with-error-messages>
+    </div>
+  </div>
+  <div class="row g-1 align-items-center">
+    <div class="col-12 col-md-3 text-md-end"><label for="bookingDate">I'd like to book a table on:</label></div>
+    <div class="col col-md-5 col-lg-3">
+      <div class="input-group">
+        <input id="bookingDate" class="form-control" placeholder="yyyy-mm-dd"
+               formControlName="bookingDate" ngbDatepicker #bookingDatepicker="ngbDatepicker">
+        <button class="btn btn-outline-secondary" (click)="bookingDatepicker.toggle()" type="button">
+          <span class="fas fa-calendar-alt"></span>
+        </button>
+      </div>
+      <ba-error-messages class="error-message"
+                         *ngIf="bookingForm.get('bookingDate')?.touched || bookingFormDirective.submitted"
+                         [of]="bookingForm.get('bookingDate')"></ba-error-messages>
+    </div>
+  </div>
+  <div class="row g-1 align-items-center">
+    <div class="col-3 text-end"><label for="bookingTimeFrom">from:</label></div>
+    <div class="col">
+      <ba-with-error-messages>
+        <ngb-timepicker id="bookingTimeFrom" formControlName="bookingTimeFrom"></ngb-timepicker>
+      </ba-with-error-messages>
+    </div>
+  </div>
+  <div class="row g-1 align-items-center">
+    <div class="col-3 text-end"><label for="bookingTimeTo">to:</label></div>
+    <div class="col">
+      <ba-with-error-messages>
+        <ngb-timepicker id="bookingTimeTo" formControlName="bookingTimeTo"></ngb-timepicker>
+      </ba-with-error-messages>
+    </div>
+  </div>
+  <div class="row mt-1 mb-3 g-1 align-items-center">
+    <div class="col-3 text-end"><label for="seatsNumber">for:</label></div>
+    <div class="col-2 col-sm-1">
+      <ba-with-error-messages>
+        <input id="seatsNumber" type="number" class="form-control" formControlName="seatsNumber">
+      </ba-with-error-messages>
+    </div>
+    <div class="col">&nbsp;person(s)</div>
+  </div>
+  <div class="row g-1 align-items-center">
+    <div class="col-3 text-end">
+      <a class="btn btn-outline-secondary" role="button" routerLink=".."><i class="fas fa-arrow-left"></i>&nbsp;<span
+        class="d-none d-sm-inline">Back</span></a>
+    </div>
+    <div class="col">
+      <button type="submit" class="btn btn-primary"><span class="p-4">Book</span></button>
+    </div>
+  </div>
+</form>
