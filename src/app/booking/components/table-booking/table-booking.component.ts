@@ -1,10 +1,11 @@
 import {Component} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NgbDate, NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
-import {add} from 'date-fns';
+import {add, format, isBefore} from 'date-fns';
 import {BookingRequest} from '../../model/booking';
 import {BookingService} from '../../services/booking.service';
+import {finalize} from 'rxjs/operators';
 
 interface BookingForm {
   email: string | null;
@@ -20,6 +21,8 @@ interface BookingForm {
   styleUrls: ['./table-booking.component.scss']
 })
 export class TableBookingComponent {
+  requestIsBeingProcessed = false;
+  backendErrors: string[] = [];
   readonly bookingForm: FormGroup;
 
   constructor(private readonly currentRoute: ActivatedRoute,
@@ -31,7 +34,7 @@ export class TableBookingComponent {
       bookingTimeFrom: new FormControl(null, Validators.required),
       bookingTimeTo: new FormControl(null, Validators.required),
       seatsNumber: new FormControl(null, Validators.required),
-    });
+    }, [startTimeBeforeEndTime]);
     this.bookingForm.setValue(getDefaultFormValues());
   }
 
@@ -39,9 +42,16 @@ export class TableBookingComponent {
     if (this.bookingForm.valid) {
       const bookingForm = this.bookingForm.value as BookingForm;
       const bookingRequest = this.fromBookingFormToBookingRequest(bookingForm);
-      this.bookings.createRequest(bookingRequest).subscribe(bookingConfirmation => {
-        return this.router.navigate(['../..', {filter: bookingConfirmation.token}])
-      });
+      this.disableFormAndClearBackendErrorsIfAny();
+      this.bookings.createRequest(bookingRequest)
+        .pipe(finalize(() => this.enableForm()))
+        .subscribe(bookingConfirmation => {
+          return this.router.navigate(['../..', {filter: bookingConfirmation.token}])
+        }, error => {
+          if (error.status === 400) {
+            this.backendErrors = [error?.error ?? 'Server could not process your request'];
+          }
+        });
     }
   }
 
@@ -59,6 +69,17 @@ export class TableBookingComponent {
     return bookingRequest;
   }
 
+  private disableFormAndClearBackendErrorsIfAny() {
+    this.bookingForm.disable();
+    this.requestIsBeingProcessed = true;
+    this.backendErrors = [];
+  }
+
+  private enableForm() {
+    this.bookingForm.enable();
+    this.requestIsBeingProcessed = false;
+  }
+
   private addSuggestedTableTo(bookingRequest: BookingRequest) {
     const suggestedTableAsString = this.currentRoute.snapshot.params.suggestedTable;
     if (suggestedTableAsString) {
@@ -68,6 +89,26 @@ export class TableBookingComponent {
       }
     }
   }
+}
+
+function startTimeBeforeEndTime(form: AbstractControl): ValidationErrors | null {
+  const bookingDate = form.get('bookingDate')?.value;
+  const bookingTimeFrom = form.get('bookingTimeFrom')?.value;
+  const bookingTimeTo = form.get('bookingTimeTo')?.value;
+  if (bookingDate && bookingTimeFrom && bookingTimeTo) {
+    const bookingDateFrom = createDatetimeFrom(bookingDate, bookingTimeFrom);
+    const bookingDateTo = createDatetimeFrom(bookingDate, bookingTimeTo);
+    if (!isBefore(bookingDateFrom, bookingDateTo)) {
+      return {
+        startTimeBeforeEndTime: {
+          startTime: format(bookingDateFrom, 'HH:mm'),
+          endTime: format(bookingDateTo, 'HH:mm')
+        }
+      };
+    }
+  }
+
+  return null;
 }
 
 function createDatetimeFrom(date: NgbDate | null, time: NgbTimeStruct | null): Date {

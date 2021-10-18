@@ -1,3 +1,11 @@
+<div class="alert alert-danger" role="alert" *ngIf="bookingForm.errors">
+  <ba-error-messages [of]="bookingForm"></ba-error-messages>
+</div>
+<div class="alert alert-danger" role="alert" *ngIf="backendErrors.length">
+  <ul class="list-unstyled m-0">
+    <li *ngFor="let backendError of backendErrors">{{backendError}}</li>
+  </ul>
+</div>
 <form [formGroup]="bookingForm" (ngSubmit)="book()" #bookingFormDirective="ngForm">
   <div class="row mb-3 g-1 align-items-center">
     <div class="col-12 col-md-3 text-md-end"><label for="bookingTimeFrom">email:</label></div>
@@ -53,7 +61,7 @@
         class="d-none d-sm-inline">Back</span></a>
     </div>
     <div class="col">
-      <button type="submit" class="btn btn-primary"><span class="p-4">Book</span></button>
+      <button type="submit" class="btn btn-primary" [disabled]="requestIsBeingProcessed"><span class="p-4">Book</span></button>
     </div>
   </div>
 </form>

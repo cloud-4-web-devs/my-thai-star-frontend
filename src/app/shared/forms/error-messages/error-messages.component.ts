@@ -39,6 +39,8 @@ function mapFromStatusToErrorMessagesOf(control: AbstractControl): OperatorFunct
               return `Please provide a correct email`;
             case 'ngbDate':
               return `Please provide a correct date`;
+            case 'startTimeBeforeEndTime':
+              return `The start time (${errorMeta.startTime}) must be before the end time (${errorMeta.endTime})`;
             default:
               return 'Unknown error';
           }
