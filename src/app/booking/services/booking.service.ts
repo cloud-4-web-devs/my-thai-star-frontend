@@ -2,12 +2,11 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Table} from '../model/table';
-import {environment} from '../../../environments/environment';
 import {Booking, BookingConfirmation, BookingRequest} from '../model/booking';
 
 @Injectable()
 export class BookingService {
-  private readonly backendUri = `${environment.backendUri}/booking`;
+  private readonly backendUri = `http://localhost:7777`;
 
   constructor(private readonly http: HttpClient) {
   }
