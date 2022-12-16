@@ -1,4 +1,4 @@
-@import "~bootstrap/scss/bootstrap";
+@import "node_modules/bootstrap/scss/bootstrap";
 
 .ng-invalid.ng-touched, form.ng-submitted .ng-invalid {
   @extend .is-invalid;

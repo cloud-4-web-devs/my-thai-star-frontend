@@ -81,7 +81,7 @@ export class TableBookingComponent {
   }
 
   private addSuggestedTableTo(bookingRequest: BookingRequest) {
-    const suggestedTableAsString = this.currentRoute.snapshot.params.suggestedTable;
+    const suggestedTableAsString = this.currentRoute.snapshot.params['suggestedTable'];
     if (suggestedTableAsString) {
       const suggestedTable = parseInt(suggestedTableAsString, 10);
       if (!isNaN(suggestedTable)) {

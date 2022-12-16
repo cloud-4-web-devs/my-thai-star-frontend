@@ -18,7 +18,7 @@ export class TableOverviewComponent implements OnDestroy {
   readonly filteredTables$: Observable<Table[]>;
   requestingTablesInProgress = false;
   private readonly filterUrlParamValues$: Observable<string>;
-  private readonly unsubscribe = new Subject();
+  private readonly unsubscribe = new Subject<void>();
 
   constructor(private readonly bookings: BookingService,
               private readonly currentRoute: ActivatedRoute,

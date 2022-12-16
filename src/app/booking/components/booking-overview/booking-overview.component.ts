@@ -20,7 +20,7 @@ export class BookingOverviewComponent implements OnDestroy {
   requestingBookingsInProgress = false;
   bookingAboutToBeCancelled: Booking | null = null;
   private readonly filterUrlParamValues$: Observable<string>;
-  private readonly unsubscribe = new Subject();
+  private readonly unsubscribe = new Subject<void>();
   private readonly triggerRequestingAllBookings = new BehaviorSubject<void>(undefined);
 
 
